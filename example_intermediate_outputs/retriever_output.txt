@@ -1,0 +1,16 @@
+## Model name
+RoBERTa (Robustly Optimized BERT Pretraining Approach)
+
+## Example Python code
+from transformers import RobertaTokenizer, RobertaForSequenceClassification
+from torch.nn import functional as F
+
+model_name = 'roberta-base'
+tokenizer = RobertaTokenizer.from_pretrained(model_name)
+model = RobertaForSequenceClassification.from_pretrained(model_name, num_labels=6)
+
+def predict(text):
+    inputs = tokenizer(text, return_tensors='pt', truncation=True, padding=True)
+    outputs = model(**inputs)
+    probs = F.sigmoid(outputs.logits).detach().numpy()
+    return probs

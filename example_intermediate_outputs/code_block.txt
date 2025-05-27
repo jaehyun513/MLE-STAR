@@ -1,0 +1,24 @@
+# Make predictions on the validation set
+catboost_y_pred = catboost_model.predict(X_val)
+lgbm_y_pred = lgbm_model.predict(X_val)
+
+# Ensemble predictions
+ensemble_y_pred = (catboost_y_pred.astype(int) + lgbm_y_pred.astype(int)) / 2
+ensemble_y_pred = np.round(ensemble_y_pred).astype(bool)
+
+# Evaluate the model
+accuracy = accuracy_score(y_val, ensemble_y_pred)
+
+# Print the final validation performance
+print(f"Final Validation Performance: {accuracy}")
+
+# Preprocess test data
+test_df_processed = preprocessor.transform(test_df)
+
+# Predict on the test set
+catboost_test_predictions = catboost_model.predict(test_df_processed)
+lgbm_test_predictions = lgbm_model.predict(test_df_processed)
+
+# Ensemble test predictions
+ensemble_test_predictions = (catboost_test_predictions.astype(int) + lgbm_test_predictions.astype(int)) / 2
+ensemble_test_predictions = np.round(ensemble_test_predictions).astype(bool)
